@@ -1,3 +1,5 @@
-module example.com/my-go-project
+module exemple.com/my-inventory
 
-go 1.23.0
+go 1.23.1
+
+require github.com/gorilla/mux v1.8.1 // indirect
