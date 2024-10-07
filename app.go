@@ -52,10 +52,44 @@ func (app *App) getProducts(w http.ResponseWriter, r *http.Request){
 	sendResponse(w, http.StatusOK, products)
 }
 
+func (app *App) getProduct(w http.ResponseWriter, r *http.Request){
+	vars := mux.Vars(r)
+	key := strconv.Atoi(vars["id"])
+    if err != nil {
+		sendError(w, http.StatusBadRequest, "invalid product ID")
+		return
+	}
+	p := product{ID: key}	
+	err := p.getProduct(app.Db)
+	if err!=nil{
+		switch err {
+		case sql.ErrNowRows: 
+		    sendError(w, http.StatusNotFound, "product not found")
+
+        default:
+		    sendError(w, http.StatusInternalServerError, err.Error())	
+		}
+		return 
+	}
+	sendResponse(w, http.StatusOK, p)
+}
+
+func (app *App) createProduct(w http.ResponseWriter, r *http.Request){
+
+	var p product
+	err :=	json.NewDecoder(r.Body).Decode(&p)
+	if err != nil {
+		sendError(w, http.StatusBadRequest, "invalid request payload")
+        return
+	}
+
+}
+
+
 func (app * App) handleRoutes(){
 	app.Router.HandleFunc("/products", app.getProducts).Methods("GET")
-   /* app.Router.HandleFunc("/products/{id}", app.getProduct).Methods("GET")
-    app.Router.HandleFunc("/products", app.createProduct).Methods("POST")
+   app.Router.HandleFunc("/product/{id}", app.getProduct).Methods("GET")
+    app.Router.HandleFunc("/product", app.createProduct).Methods("POST")
     app.Router.HandleFunc("/products/{id}", app.updateProduct).Methods("PUT")
-    app.Router.HandleFunc("/products/{id}", app.deleteProduct).Methods("DELETE") */
+    app.Router.HandleFunc("/products/{id}", app.deleteProduct).Methods("DELETE") 
 }

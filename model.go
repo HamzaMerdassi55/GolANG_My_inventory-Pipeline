@@ -19,9 +19,38 @@ func getProducts(db *sql.DB) ([]product, error) {
 	for rows.Next() {
 		var p product
         err := rows.Scan(&p.ID, &p.Name, &p.Quantity, &p.Price)
-        if err!= nil 
+        if err!= nil {
+			return nil, err
+		}
         products = append(products, p)
 	}
-	
+
 	return products, nil
+
+}
+
+func (p *product) getProduct(db *sql.Db)error {
+	query := fmt.Sprintf("SELECT name, quantity, price FROM products where id=%v", p.ID)
+	rows := db.QueryRow(query)
+	err := row.Scan(&p.Name, &p.Quantity, &p.Price)
+	if err!= nil {
+		return err
+	}
+	return nil
+} 
+
+func (p *product) createProduct(db *sql.DB) error {
+	query := fmt.Sprintf("insert into products values('%v', %v, %v)", p.Name, p.Quantity, p.Price)
+    result, err := db.Exec(query)
+    if err!= nil {
+        return err
+    }
+
+
+	id, err := result.LastInsertId()
+	if err!= nil {
+        return err
+    }
+	p.ID = int(id)
+	return nil
 }
