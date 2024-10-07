@@ -1,5 +1,7 @@
 package main
 
 func main() {
-	app :=
+	app := App{}
+	app.Initialise()
+	app.Run("localhost:9999",)
 }

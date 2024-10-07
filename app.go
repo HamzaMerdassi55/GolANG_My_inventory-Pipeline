@@ -24,9 +24,7 @@ func (app *App) Initialise() error {
 	return nil
 }
 
-func (app *App) Run (address string) {
-	log.Fatal(http.ListenAndServe(address, app.Router))
-}
+
 
 func sendResponse(w http.ResponseWriter,statusCode int, payload interface{}){
 	response , _ := json.Marshal(payload)
@@ -39,11 +37,24 @@ func sendError(w http.ResponseWriter, statusCode int , err string){
 	error_message := map[string]string{"error":err}
 	sendResponse(w, statusCode , error_message)
 }
+func (app *App) Run (address string) {
+	log.Fatal(http.ListenAndServe(address, app.Router))
+}
+
+
+func (app *App) getProducts(w http.ResponseWriter, r *http.Request){
+	products, err := getproducts(app.Db)
+	if err!= nil{
+        sendError(w, http.StatusInternalServerError, err)
+        return
+    }
+	sendResponse(w, http.StatusOK, products)
+}
 
 func (app * App) handleRoutes(){
-	app.Router.HandleFunc("/api/products", app.getProducts).Methods("GET")
-    app.Router.HandleFunc("/api/products/{id}", app.getProduct).Methods("GET")
-    app.Router.HandleFunc("/api/products", app.createProduct).Methods("POST")
-    app.Router.HandleFunc("/api/products/{id}", app.updateProduct).Methods("PUT")
-    app.Router.HandleFunc("/api/products/{id}", app.deleteProduct).Methods("DELETE")
+	app.Router.HandleFunc("/products", app.getProducts).Methods("GET")
+   /* app.Router.HandleFunc("/products/{id}", app.getProduct).Methods("GET")
+    app.Router.HandleFunc("/products", app.createProduct).Methods("POST")
+    app.Router.HandleFunc("/products/{id}", app.updateProduct).Methods("PUT")
+    app.Router.HandleFunc("/products/{id}", app.deleteProduct).Methods("DELETE") */
 }
