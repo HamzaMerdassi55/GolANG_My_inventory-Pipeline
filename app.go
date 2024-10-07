@@ -21,6 +21,7 @@ func (app *App) Initialise() error {
 	}
 
 	app.Router = mux.NewRouter().StrictSlash(true)
+	app.handleRoutes()
 	return nil
 }
 
@@ -45,7 +46,7 @@ func (app *App) Run (address string) {
 func (app *App) getProducts(w http.ResponseWriter, r *http.Request){
 	products, err := getproducts(app.Db)
 	if err!= nil{
-        sendError(w, http.StatusInternalServerError, err)
+        sendError(w, http.StatusInternalServerError, err.Error())
         return
     }
 	sendResponse(w, http.StatusOK, products)
