@@ -55,6 +55,7 @@ func (app *App) getProducts(w http.ResponseWriter, r *http.Request) {
 	sendResponse(w, http.StatusOK, products)
 }
 
+
 func (app *App) getProduct(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key, err := strconv.Atoi(vars["id"])
