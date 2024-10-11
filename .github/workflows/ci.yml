@@ -5,6 +5,7 @@ env:
   DB_NAME: test
   DB_USER: root 
   DB_PASSWORD: Hamza#123
+  DOCKER_IMAGE_NAME: my-go-app:latest
 jobs:
   run_code_checks: 
     runs-on: ubuntu-latest  
