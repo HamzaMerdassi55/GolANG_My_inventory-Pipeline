@@ -1,5 +1,7 @@
-name: Continouns Integration 
-on: push 
+name: Continuous Integration 
+
+on: 
+  push: 
 
 env:
   DB_NAME: test
@@ -7,27 +9,28 @@ env:
   DB_PASSWORD: Hamza#123
 
 jobs:
-  run_code_cheks: 
+  run_code_checks: 
     runs-on: ubuntu-latest 
   
     steps: 
-  
-    - name: Set up Mysql
-      run: 
-        sudo /etc/init.d/mysql start
-        sudo mysql -e 'ALTER USER "${{env.DB_USER}}"@"localhost" IDENTIFIED BY ${{env.DB_PASSWORD}}";' -uroot -proot
-        sudo mysql -e 'CREATE DATABASE ${{env.DB_NAME}};' -u${{env.DB_USER}} -p${{env.DB_PASSWORD}}
-     
-    - name: Checkout repository 
-      uses: actions/checkout@v2 
-    - name: Set Up Go 
-    - uses: actions/setup-go@v2
-      with:
-        go-version: go1.23.1
+      - name: Set up MySQL
+        run: |
+          sudo /etc/init.d/mysql start
+          sudo mysql -e "ALTER USER '${{ env.DB_USER }}'@'localhost' IDENTIFIED BY '${{ env.DB_PASSWORD }}';"
+          sudo mysql -e "CREATE DATABASE '${{ env.DB_NAME }}';" -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
 
-    - name: Run linting
-      run: |
-        go fmt ./...
-        go vet ./...
-    - name: Run tests
-      run: go test 
+      - name: Checkout repository 
+        uses: actions/checkout@v2 
+
+      - name: Set Up Go 
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.23.1'
+
+      - name: Run linting
+        run: |
+          go fmt ./...
+          go vet ./...
+
+      - name: Run tests
+        run: go test ./...
