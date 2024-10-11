@@ -5,6 +5,7 @@ env:
   DB_NAME: test
   DB_USER: root 
   DB_PASSWORD: Hamza#123
+  DOCKER_USERNAME: hamza6
 jobs:
   run_code_checks: 
     runs-on: ubuntu-latest  
@@ -40,7 +41,7 @@ jobs:
         uses: actions/checkout@v2 
 
       - name: Set up Docker Image Name
-        run: echo "DOCKER_IMAGE_NAME=${{ env.DOCKER_USERNAME }}/my-go-app" >> $GITHUB_ENV
+        run: echo "DOCKER_IMAGE_NAME=${{ env.DOCKER_USERNAME }}/my-go-app:latest" >> $GITHUB_ENV
 
       - name: Build Docker Image
         run: |
