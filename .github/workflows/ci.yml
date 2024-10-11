@@ -49,4 +49,4 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        docker build -t ${{ env.DOCKER_IMAGE_NAME }} .
+        docker buildx build --tag ${{ env.DOCKER_IMAGE_NAME }} --push .
